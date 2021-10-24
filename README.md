@@ -9,6 +9,7 @@ bing and yahoo. </h3>
 <p><b>
  $ php google-hcrawler.php [dork-list] <br>
  $ php bing-hcrawler.php [dork-list] <br>
- $ php bing-hcrawler.php [dork-list] </b></p>
+ $ php bing-hcrawler.php [dork-list] <br>
+ $ php googleapi.php [dork-list]</b></p>
 
 
