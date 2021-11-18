@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(0); 
+error_reporting(0);
 
 include("keys2.php");
 
@@ -16,15 +16,10 @@ echo "                                                         |___/   ";
     echo "\n-------------------------\n";
     echo "   Author: HearSecurity  \n";
     echo "----------------------------------\n";
-    echo "   Tool: Google Website spider    \n";
-    echo "--------------------------------------------\n";
-    echo "   Usage: google-hcrawler.php <dork-file>    \n";
-    echo "--------------------------------------------\n\n";
-}
-
-function getHost($Address) {
-   $parseUrl = parse_url(trim($Address));
-   return trim($parseUrl['host'] ? $parseUrl['host'] : array_shift(explode('/', $parseUrl['path'], 2)));
+    echo "   Tool: Bing Website spider    \n";
+    echo "------------------------------------------\n";
+    echo "   Usage: bing-hcrawler.php <dork-file>    \n";
+    echo "-----------------------------------------\n\n";
 }
 
 function file_get_contents_curl($url) {
@@ -61,35 +56,23 @@ function website_crawler($query) {
   while($counter < count($query)) {
 
      $page = 0;
-     $engine = generate_search();
+     $engine = "www.bing.com";
      echo "[*] Dorking: ". $query[$counter];
 
-     while($page < 400) {
-        
-        $url = "https://".$engine."/search?q=".urlencode($query[$counter]).'&num=3000&btnG=Search&pws=1&start='.$page;
+     while($page < 110) {
 
+        $url = "https://".$engine."/search?q=".urlencode($query[$counter]).'&first='.$page;
         $scrape = file_get_contents_curl($url);
-        sleep(5); 
-        //if (strpos($scrape, 'recaptcha') !== false) {
-          //  continue;
-       // } else {
-            echo "$url\n"; 
-       // }
-       
 
-        preg_match_all('#[-a-zA-Z0-9@:%_\+.~\#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~\#?&//=]*)?#si', $scrape, $result);
+        preg_match_all('#\b(http[s]?://|ftp[s]?://){1,}?([-a-zA-Z0-9\.]+)([-a-zA-Z0-9\.]){1,}([-a-zA-Z0-9_\.\#\@\:%_/\?\=\~\-\//\!\'\(\)\s\^\:blank:\:punct:\:xdigit:\:space:\$]+)#si', $scrape, $result);
+
         foreach($result[0] as $url) {
 
-           if(strstr($url, "http")) {
-             $url = str_replace("/url?q="," ",$url);
-             $domain = getHost($url);
+           if(strstr($url, "http") || strstr($url, "https")) {
+            $url = str_replace('"'," ",$url);
+            $domain = $url;
 
-             if($domain == "www.wapforum.org" || $domain == "www.w3.org" || $domain == "www.google.com.br" ||
-                  $domain == "support.google.com" || $domain == "accounts.google.com" || $domain == "sites.google.com" ||
-                  $domain == "maps.google.com.br" || $domain == "play.google.com" || $domain == "www.youtube.com" ||
-                  $domain == "www.youtube.com" || $domain == "news.google.com" || $domain == "news.google.com" ||
-                  $domain == "mail.google.com" || $domain == "mail.google.com" || $domain == "drive.google.com" ||
-                  $domain == "www.google.com" || $domain == $engine) {
+             if($domain == $engine) {
                   echo "";
               } else {
                   $fp = fopen('sites.txt', 'a');
@@ -100,8 +83,7 @@ function website_crawler($query) {
 
             }
        }
-       sleep(40);
-       $page += 100;
+       $page += 11;
      }
      $counter++;
   }

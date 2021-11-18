@@ -66,7 +66,7 @@ function website_crawler($query) {
 
      echo "[*] Dorking: ". $query[$counter];
 
-     while($page < 300) {
+     while($page < 100) {
 
         $url = "https://".$engine."/search?p="
         .urlencode($query[$counter]).'&ei=UTF-8&b='.$page;

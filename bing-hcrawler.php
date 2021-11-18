@@ -64,7 +64,7 @@ function website_crawler($query) {
      $engine = "www.bing.com";
      echo "[*] Dorking: ". $query[$counter];
 
-     while($page < 300) {
+     while($page < 110) {
 
         $url = "https://".$engine."/search?q=".urlencode($query[$counter]).'&first='.$page;
         $scrape = file_get_contents_curl($url);

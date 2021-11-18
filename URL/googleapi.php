@@ -39,7 +39,6 @@ $i = 0;
       $key = generate_keys();
       $url = "https://www.googleapis.com/customsearch/v1?key="
      .$key."&cx=013036536707430787589:_pqjad5hr1a&q=".urlencode($dorks[$i])."&alt=json&start=".$page."";
-
       $curl = curl_init();
 
       curl_setopt($curl,CURLOPT_URL, $url);
@@ -49,14 +48,7 @@ $i = 0;
       curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-      $output = curl_exec($curl); 
-
-      if (strpos($output, 'Quota') !== false) {
-         continue;
-      }else{
-         echo "$url\n";
-      }
-
+      $output = curl_exec($curl);
       $array = json_decode($output, true);
       $count = 0;
 

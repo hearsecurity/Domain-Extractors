@@ -22,11 +22,6 @@ echo "                                                         |___/   ";
     echo "--------------------------------------------\n\n";
 }
 
-function getHost($Address) {
-   $parseUrl = parse_url(trim($Address));
-   return trim($parseUrl['host'] ? $parseUrl['host'] : array_shift(explode('/', $parseUrl['path'], 2)));
-}
-
 function file_get_contents_curl($url) {
 
   $useragent = random_user_agent();
@@ -62,27 +57,29 @@ function website_crawler($query) {
 
      $page = 0;
      $engine = generate_search();
+
      echo "[*] Dorking: ". $query[$counter];
 
      while($page < 400) {
-        
+
         $url = "https://".$engine."/search?q=".urlencode($query[$counter]).'&num=3000&btnG=Search&pws=1&start='.$page;
-
         $scrape = file_get_contents_curl($url);
-        sleep(5); 
-        //if (strpos($scrape, 'recaptcha') !== false) {
-          //  continue;
-       // } else {
-            echo "$url\n"; 
-       // }
-       
+        sleep(10); 
 
-        preg_match_all('#[-a-zA-Z0-9@:%_\+.~\#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~\#?&//=]*)?#si', $scrape, $result);
+        preg_match_all('#\b(http[s]?://|ftp[s]?://){1,}?([-a-zA-Z0-9\.]+)([-a-zA-Z0-9\.]){1,}([-a-zA-Z0-9_\.\#\@\:%_/\?\=\~\-\//\!\'\(\)\s\^\:blank:\:punct:\:xdigit:\:space:\$]+)#si', $scrape, $result);
+
         foreach($result[0] as $url) {
 
-           if(strstr($url, "http")) {
              $url = str_replace("/url?q="," ",$url);
-             $domain = getHost($url);
+             $url = urldecode($url);
+            // if(strstr($url, "&")) {
+            //     $parts = explode('&', $url);
+                 //print_r($parts);
+            //     $domain = $parts[0];
+          //   } else {
+                $domain = $url;
+          //   }
+
 
              if($domain == "www.wapforum.org" || $domain == "www.w3.org" || $domain == "www.google.com.br" ||
                   $domain == "support.google.com" || $domain == "accounts.google.com" || $domain == "sites.google.com" ||
@@ -92,17 +89,16 @@ function website_crawler($query) {
                   $domain == "www.google.com" || $domain == $engine) {
                   echo "";
               } else {
-                  $fp = fopen('sites.txt', 'a');
+                  $fp = fopen('google.txt', 'a');
                   if(!empty($domain)) {
                       fwrite($fp, $domain ."\n");
                   }
               }
 
-            }
+
        }
-       sleep(40);
-       $page += 100;
-     }
+      $page += 100;
+      }
      $counter++;
   }
 }
